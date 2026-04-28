@@ -3,9 +3,536 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Web Toy</title>
+  <title>แจ้งรับเช็คคณะเทคนิคการแพทย์ ม.มหิดล</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      padding: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #1f2937;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 32px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+    .header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    .logo-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .logo {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+    }
+    .title-area {
+      text-align: center;
+      min-width: 0;
+    }
+    .title-area h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.4;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .title-area p {
+      margin: 10px 0 0;
+      color: #64748b;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .search-area {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 28px 0;
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 16px;
+    }
+    .search-area input {
+      flex: 1;
+      min-width: 200px;
+      padding: 14px 18px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    .search-area input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+    }
+    .search-area button {
+      flex: none;
+      padding: 14px 32px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    .search-area button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+    .search-area button:active {
+      transform: translateY(0);
+    }
+    .status {
+      margin-bottom: 18px;
+      color: #475569;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .status.error {
+      color: #dc2626;
+    }
+    .hint {
+      margin: 0 0 14px;
+      color: #64748b;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .location-box {
+      background: linear-gradient(135deg, #fef3f2 0%, #fed7d2 100%);
+      border: 2px solid #fed7d2;
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      color: #1f2937;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+    }
+    .location-box h3 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #b42318;
+    }
+    .location-box p {
+      margin: 0;
+      font-size: 15px;
+      color: #5f3634;
+      line-height: 1.8;
+    }
+    .location-box div {
+      margin-bottom: 8px;
+    }
+    .guide-box {
+      background: linear-gradient(135deg, #f8fbff 0%, #dbeafe 100%);
+      border: 2px solid #dbeafe;
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      color: #1f2937;
+      line-height: 1.8;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+    }
+    .guide-box h2 {
+      margin: 0 0 14px;
+      font-size: 17px;
+      font-weight: 700;
+      color: #1e40af;
+    }
+    .guide-box ul {
+      margin: 0 0 14px 18px;
+      padding: 0;
+    }
+    .guide-box ul li {
+      margin-bottom: 10px;
+      color: #334155;
+    }
+    .guide-box ul ul {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      margin-left: 20px;
+    }
+    #results {
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+      margin-top: 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    th, td {
+      text-align: left;
+      padding: 16px 14px;
+      border-bottom: 1px solid #cbd5e1;
+      white-space: nowrap;
+    }
+    th {
+      background: #1e293b;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    tbody tr {
+      transition: background-color 0.2s ease;
+    }
+    tbody tr:hover {
+      background: #f1f5f9;
+    }
+    tbody tr:nth-child(even) {
+      background: #ffffff;
+    }
+    tbody tr:nth-child(odd) {
+      background: #f8fafc;
+    }
+    .footer {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid #e2e8f0;
+      color: #94a3b8;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        padding: 20px;
+      }
+      .header {
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      .logo {
+        width: 64px;
+        height: 64px;
+      }
+      .title-area h1 {
+        font-size: 22px;
+      }
+      .title-area p {
+        font-size: 14px;
+      }
+      .search-area {
+        flex-direction: column;
+        padding: 16px;
+      }
+      .search-area input {
+        min-width: unset;
+        width: 100%;
+      }
+      .search-area button {
+        width: 100%;
+      }
+      th, td {
+        padding: 10px 8px;
+        font-size: 13px;
+      }
+      th {
+        font-size: 12px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>My Web Toy</h1>
+  <div class="container">
+    <div class="header">
+      <div class="logo-container">
+        <img class="logo" src="logo_MT.png" alt="Logo MT">
+      </div>
+      <div class="title-area">
+        <h1>แจ้งรับเช็คคณะเทคนิคการแพทย์ ม.มหิดล</h1>
+      </div>
+    </div>
+
+    <div class="search-area">
+      <input id="queryInput" type="search" placeholder="ค้นหา ชื่อบริษัท หรือ ใบแจ้งหนี้ (Invoice)" />
+      <button id="searchButton">ค้นหา</button>
+    </div>
+
+    <p class="status" id="status">กำลังโหลดข้อมูล</p>
+    <p class="hint"></p>
+
+    <div id="results"></div>
+
+    <div class="guide-box">
+      <h2>กรณีมอบอำนาจ เอกสารที่ต้องนำมา</h2>
+      <ul>
+        <li>สำเนาหนังสือรับรองการจัดตั้งบริษัท</li>
+        <li>ต้นฉบับใบเสร็จรับเงิน</li>
+        <li>หนังสือมอบอำนาจ โดยต้องระบุว่าเป็นการรับเช็คของ
+          <ul>
+            <li>คณะเทคนิคการแพทย์ ม.มหิดล</li>
+            <li>ถ้าเป็นโครงการวิจัยต้องระบุว่าเป็นเช็คของ
+              <ul>
+                <li>โครงการวิจัยฯ คณะเทคนิคการแพทย์ ม.มหิดล</li>
+                <li>ครั้งเดียว: แนบอากรแสตมป์ 10 บาท พร้อมระบุหมายเลข Invoice</li>
+                <li>รายปี: แนบอากรแสตมป์ 30 บาท และระบุช่วงวันที่ เช่น 1 ต.ค. 2568 - 30 ก.ย. 2569</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>สำเนาบัตรประชาชน ของผู้มารับเช็คและผู้มอบอำนาจพร้อมเซ็นรับรองสำเนาถูกต้อง</li>
+      </ul>
+
+      <h2>กรณีเจ้าของบริษัทหรือเจ้าของกิจการมารับเอง</h2>
+      <ul>
+        <li>สำเนาหนังสือรับรองการจัดตั้งบริษัท</li>
+        <li>ต้นฉบับใบเสร็จรับเงิน</li>
+        <li>สำเนาบัตรประชาชน ของผู้มารับเช็ค พร้อมเซ็นรับรองสำเนาถูกต้อง</li>
+      </ul>
+    </div>
+
+    <div class="location-box">
+      <h3>สถานที่รับเช็ค</h3>
+      <p id="locationText">กำลังโหลดข้อมูล...</p>
+    </div>
+
+  </div>
+
+  <script>
+    const sheetCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTz3LhtG1-kAQVDhQGbVnajeG3TE76MnWNiE3hBymWWzRr42_NFRMVx-zjnrHFcSEYPcnYRF9uE7Rec/pub?output=csv';
+    const statusEl = document.getElementById('status');
+    const resultsEl = document.getElementById('results');
+    const queryInput = document.getElementById('queryInput');
+    const searchButton = document.getElementById('searchButton');
+
+    let rows = [];
+    let headers = [];
+    let columnIndexes = {};
+    let hasSearched = false;
+
+    function parseCsv(text) {
+      const lines = text.trim().split('\n');
+      return lines.map(line => {
+        const cells = [];
+        let current = '';
+        let inQuotes = false;
+
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+          if (char === '"') {
+            if (inQuotes && line[i + 1] === '"') {
+              current += '"';
+              i++;
+            } else {
+              inQuotes = !inQuotes;
+            }
+          } else if (char === ',' && !inQuotes) {
+            cells.push(current);
+            current = '';
+          } else {
+            current += char;
+          }
+        }
+        cells.push(current);
+        return cells;
+      });
+    }
+
+    function setStatus(text, isError = false) {
+      statusEl.textContent = text;
+      statusEl.classList.toggle('error', isError);
+    }
+
+    function normalizeHeader(name) {
+      return name.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[^a-z0-9ก-ฮ ]/g, '');
+    }
+
+    function findColumnIndexes() {
+      const candidates = {
+        checkDate: ['วันที่เช็ค', 'check date', 'date'],
+        checkNumber: ['เลขที่เช็ค', 'check no', 'check number'],
+        company: ['ชื่อบริษัท', 'company name', 'company'],
+        invoice: ['ใบแจ้งหนี้', 'invoice'],
+        beforeTax: ['จำนวนเงินก่อนหักภาษี', 'amount before tax', 'before tax'],
+        tax1: ['ภาษี 1%', 'tax 1%', 'tax1', 'tax'],
+        afterTax: ['จำนวนเงินหลังภาษี', 'amount after tax', 'after tax'],
+        authorityType: ['ประเภทมอบอำนาจ', 'authority type', 'type']
+      };
+
+      headers.forEach((header, index) => {
+        const norm = normalizeHeader(header);
+        for (const key in candidates) {
+          if (candidates[key].some(item => normalizeHeader(item) === norm)) {
+            columnIndexes[key] = index;
+          }
+        }
+      });
+    }
+
+    function renderResults(filteredRows) {
+      if (!hasSearched) {
+        resultsEl.innerHTML = '';
+        return;
+      }
+
+      if (!filteredRows.length) {
+        resultsEl.innerHTML = '<p>ไม่พบข้อมูลที่ตรงกับคำค้นหา</p>';
+        return;
+      }
+
+      const displayHeaders = [
+        'วันที่เช็ค',
+        'เลขที่เช็ค',
+        'ชื่อบริษัท',
+        'ใบแจ้งหนี้',
+        'จำนวนเงินก่อนหักภาษี',
+        'ภาษี 1%',
+        'จำนวนเงินหลังภาษี',
+        'ประเภทมอบอำนาจ'
+      ];
+
+      const table = document.createElement('table');
+      const thead = document.createElement('thead');
+      const headerRow = document.createElement('tr');
+      displayHeaders.forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header;
+        headerRow.appendChild(th);
+      });
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+      filteredRows.forEach(row => {
+        const tr = document.createElement('tr');
+        const cells = [
+          row[columnIndexes.checkDate] || '',
+          row[columnIndexes.checkNumber] || '',
+          row[columnIndexes.company] || '',
+          row[columnIndexes.invoice] || '',
+          row[columnIndexes.beforeTax] || '',
+          row[columnIndexes.tax1] || '',
+          row[columnIndexes.afterTax] || '',
+          row[columnIndexes.authorityType] || ''
+        ];
+        cells.forEach(cell => {
+          const td = document.createElement('td');
+          td.textContent = cell;
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      resultsEl.innerHTML = '';
+      resultsEl.appendChild(table);
+    }
+
+    function search(query) {
+      const normalized = query.trim().toLowerCase();
+      hasSearched = true;
+      if (!normalized) {
+        setStatus('กรุณาใส่คำค้นหา ชื่อบริษัท หรือ ใบแจ้งหนี้ (Invoice)', true);
+        resultsEl.innerHTML = '';
+        return;
+      }
+
+      const filteredRows = rows.filter(row => {
+        const companyValue = (row[columnIndexes.company] || '').toLowerCase();
+        const invoiceValue = (row[columnIndexes.invoice] || '').toLowerCase();
+        return companyValue.includes(normalized) || invoiceValue.includes(normalized);
+      });
+
+      renderResults(filteredRows);
+      setStatus(`ผลการค้นหา "${query}": ${filteredRows.length} รายการ`);
+    }
+
+    function initializeTable(parsed) {
+      if (!parsed.length) {
+        setStatus('ไม่พบข้อมูลใน Google Sheets', true);
+        return;
+      }
+      headers = parsed[0];
+      rows = parsed.slice(1);
+      findColumnIndexes();
+      setStatus('ข้อมูลโหลดเรียบร้อยแล้ว กรุณาใส่ชื่อบริษัท หรือ ใบแจ้งหนี้ เพื่อค้นหา');
+    }
+
+    async function loadSheetData() {
+      try {
+        const response = await fetch(sheetCsvUrl);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const csvText = await response.text();
+        const parsed = parseCsv(csvText);
+        initializeTable(parsed);
+      } catch (error) {
+        setStatus('เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + error.message, true);
+        resultsEl.innerHTML = '<p>ลองตรวจสอบการเชื่อมต่ออินเทอร์เน็ตหรือ URL ของ Google Sheets</p>';
+      }
+    }
+
+    async function loadLocationData() {
+      const locationText = document.getElementById('locationText');
+      const sheetId = '2PACX-1vTz3LhtG1-kAQVDhQGbVnajeG3TE76MnWNiE3hBymWWzRr42_NFRMVx-zjnrHFcSEYPcnYRF9uE7Rec';
+      const gid = 1883072280; // Sheet "ประกาศ"
+      
+      try {
+        const url = `https://docs.google.com/spreadsheets/d/e/${sheetId}/pub?output=csv&gid=${gid}`;
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+          locationText.textContent = 'ไม่สามารถโหลดข้อมูล (HTTP ' + response.status + ')';
+          return;
+        }
+        
+        const csvText = await response.text();
+        const lines = csvText.split('\n');
+        
+        // เอา 7 บรรทัดแรก (A1:A7)
+        const dataLines = [];
+        for (let i = 0; i < Math.min(7, lines.length); i++) {
+          const row = parseCsv(lines[i])[0] || [];
+          const value = (row[0] || '').trim();
+          dataLines.push(value);
+        }
+        
+        if (dataLines.length > 0) {
+          locationText.innerHTML = dataLines.map(line => `<div>${line || '&nbsp;'}</div>`).join('');
+        } else {
+          locationText.textContent = 'ไม่พบข้อมูลใน A1:A7';
+        }
+      } catch (error) {
+        locationText.textContent = 'เกิดข้อผิดพลาด: ' + error.message;
+      }
+    }
+
+    searchButton.addEventListener('click', () => search(queryInput.value));
+    queryInput.addEventListener('keydown', event => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        search(queryInput.value);
+      }
+    });
+
+    loadLocationData();
+    loadSheetData();
+  </script>
 </body>
 </html>
